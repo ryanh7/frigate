@@ -15,7 +15,7 @@ from pydantic import Field
 from typing_extensions import Literal
 
 from frigate.detectors.detection_api import DetectionApi
-from frigate.detectors.detector_config import BaseDetectorConfig
+from frigate.detectors.detector_config import BaseDetectorConfig, ModelTypeEnum
 
 logger = logging.getLogger(__name__)
 
@@ -75,15 +75,17 @@ class TensorRtDetector(DetectionApi):
     type_key = DETECTOR_KEY
 
     def _load_engine(self, model_path):
-        try:
-            trt.init_libnvinfer_plugins(self.trt_logger, "")
 
-            ctypes.cdll.LoadLibrary("/usr/local/lib/libyolo_layer.so")
-        except OSError as e:
-            logger.error(
-                "ERROR: failed to load libraries. %s",
-                e,
-            )
+        if self.model_type not in (ModelTypeEnum.yolov5, ModelTypeEnum.yolov8):
+            try:
+                trt.init_libnvinfer_plugins(self.trt_logger, "")
+
+                ctypes.cdll.LoadLibrary("/usr/local/lib/libyolo_layer.so")
+            except OSError as e:
+                logger.error(
+                    "ERROR: failed to load libraries. %s",
+                    e,
+                )
 
         with open(model_path, "rb") as f, trt.Runtime(self.trt_logger) as runtime:
             return runtime.deserialize_cuda_engine(f.read())
@@ -219,6 +221,9 @@ class TensorRtDetector(DetectionApi):
         self.trt_logger = TrtLogger()
         self.engine = self._load_engine(detector_config.model.path)
         self.input_shape = self._get_input_shape()
+        self.height = detector_config.model.height
+        self.width = detector_config.model.width
+        self.model_type = detector_config.model.model_type
 
         try:
             self.context = self.engine.create_execution_context()
@@ -248,7 +253,7 @@ class TensorRtDetector(DetectionApi):
         del self.trt_logger
         cuda.cuCtxDestroy(self.cu_ctx)
 
-    def _postprocess_yolo(self, trt_outputs, conf_th):
+    def _postprocess_yolov7(self, trt_outputs, conf_th):
         """Postprocess TensorRT outputs.
         # Args
             trt_outputs: a list of 2 or 3 tensors, where each tensor
@@ -265,6 +270,82 @@ class TensorRtDetector(DetectionApi):
             dets = dets[dets[:, 4] * dets[:, 6] >= conf_th]
             detections.append(dets)
         detections = np.concatenate(detections, axis=0)
+
+        if len(detections) == 0:
+            return np.zeros((20, 6), np.float32)
+
+        # detections: Nx7 numpy arrays of
+        #             [[x, y, w, h, box_confidence, class_id, class_prob],
+
+        # Calculate score as box_confidence x class_prob
+        detections[:, 4] = detections[:, 4] * detections[:, 6]
+        # Reorder elements by the score, best on top, remove class_prob
+        ordered = detections[detections[:, 4].argsort()[::-1]][:, 0:6]
+        # transform width to right with clamp to 0..1
+        ordered[:, 2] = np.clip(ordered[:, 2] + ordered[:, 0], 0, 1)
+        # transform height to bottom with clamp to 0..1
+        ordered[:, 3] = np.clip(ordered[:, 3] + ordered[:, 1], 0, 1)
+        # put result into the correct order and limit to top 20
+        detections = ordered[:, [5, 4, 1, 0, 3, 2]][:20]
+
+        # pad to 20x6 shape
+        append_cnt = 20 - len(detections)
+        if append_cnt > 0:
+            detections = np.append(
+                detections, np.zeros((append_cnt, 6), np.float32), axis=0
+            )
+
+        return detections
+    
+    def _postprocess_yolov5_8(self, results):
+        """
+        Processes yolov8 output.
+
+        Args:
+        results: array with shape: (1, 84, n, 1) where n depends on yolov8 model size (for 320x320 model n=2100)
+
+        Returns:
+        detections: array with shape (20, 6) with 20 rows of (class, confidence, y_min, x_min, y_max, x_max)
+        """
+
+        results = np.transpose(np.array(results[0, :, :, 0]))  # array shape (2100, 84)
+        scores = np.max(
+            results[:, 4:], axis=1
+        )  # array shape (2100,); max confidence of each row
+
+        # remove lines with score scores < 0.4
+        filtered_arg = np.argwhere(scores > self.conf_th)
+        results = results[filtered_arg[:, 0]]
+        scores = scores[filtered_arg[:, 0]]
+
+        num_detections = len(scores)
+
+        if num_detections == 0:
+            return np.zeros((20, 6), np.float32)
+
+        if num_detections > 20:
+            top_arg = np.argpartition(scores, -20)[-20:]
+            results = results[top_arg]
+            scores = scores[top_arg]
+            num_detections = 20
+
+        classes = np.argmax(results[:, 4:], axis=1)
+
+        boxes = np.transpose(
+            np.vstack(
+                (
+                    (results[:, 1] - 0.5 * results[:, 3]) / self.height,
+                    (results[:, 0] - 0.5 * results[:, 2]) / self.width,
+                    (results[:, 1] + 0.5 * results[:, 3]) / self.height,
+                    (results[:, 0] + 0.5 * results[:, 2]) / self.width,
+                )
+            )
+        )
+
+        detections = np.zeros((20, 6), np.float32)
+        detections[:num_detections, 0] = classes
+        detections[:num_detections, 1] = scores
+        detections[:num_detections, 2:] = boxes
 
         return detections
 
@@ -285,30 +366,7 @@ class TensorRtDetector(DetectionApi):
         )
         trt_outputs = self._do_inference()
 
-        raw_detections = self._postprocess_yolo(trt_outputs, self.conf_th)
+        if self.model_type in (ModelTypeEnum.yolov5, ModelTypeEnum.yolov8):
+            return self._postprocess_yolov5_8(trt_outputs) 
 
-        if len(raw_detections) == 0:
-            return np.zeros((20, 6), np.float32)
-
-        # raw_detections: Nx7 numpy arrays of
-        #             [[x, y, w, h, box_confidence, class_id, class_prob],
-
-        # Calculate score as box_confidence x class_prob
-        raw_detections[:, 4] = raw_detections[:, 4] * raw_detections[:, 6]
-        # Reorder elements by the score, best on top, remove class_prob
-        ordered = raw_detections[raw_detections[:, 4].argsort()[::-1]][:, 0:6]
-        # transform width to right with clamp to 0..1
-        ordered[:, 2] = np.clip(ordered[:, 2] + ordered[:, 0], 0, 1)
-        # transform height to bottom with clamp to 0..1
-        ordered[:, 3] = np.clip(ordered[:, 3] + ordered[:, 1], 0, 1)
-        # put result into the correct order and limit to top 20
-        detections = ordered[:, [5, 4, 1, 0, 3, 2]][:20]
-
-        # pad to 20x6 shape
-        append_cnt = 20 - len(detections)
-        if append_cnt > 0:
-            detections = np.append(
-                detections, np.zeros((append_cnt, 6), np.float32), axis=0
-            )
-
-        return detections
+        return self._postprocess_yolov7(trt_outputs) 
