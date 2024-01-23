@@ -38,6 +38,7 @@ AUDIO_MIN_CONFIDENCE = 0.5
 # Regex Consts
 
 REGEX_CAMERA_NAME = r"^[a-zA-Z0-9_-]+$"
+REGEX_CAMERA_RATIO = r"^\d+/\d+$"
 REGEX_RTSP_CAMERA_USER_PASS = r":\/\/[a-zA-Z0-9_-]+:[\S]+@"
 REGEX_HTTP_CAMERA_USER_PASS = r"user=[a-zA-Z0-9_-]+&password=[\S]+"
 
