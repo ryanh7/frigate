@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import useSWR from 'swr';
 import { IntlProvider } from 'react-intl';
 import languageMessages from './languages'
 
@@ -20,14 +21,16 @@ export const useLanguage = () => {
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(getUserLanguage());
   const [messages, setMessages] = useState({});
+  const { data: config } = useSWR('config');
 
   useEffect(() => {
     const fetchMessages = async () => {
-      setMessages(languageMessages[language]);
+      const messages = languageMessages[language]
+      setMessages({...messages, ...config.translations});
     };
 
     fetchMessages();
-  }, [language]);
+  }, [language, config]);
 
   const changeLanguage = async (newLanguage) => {
     setLanguage(newLanguage);
@@ -37,7 +40,6 @@ export function LanguageProvider({ children }) {
     <IntlProvider locale={language} messages={messages}>
       {children}
     </IntlProvider>
-  </LanguageContext.Provider>
-    ;
+  </LanguageContext.Provider>;
 };
 

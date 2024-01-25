@@ -1,6 +1,5 @@
 import { h, FunctionComponent } from 'preact';
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import { FormattedMessage } from 'react-intl';
 
 interface IProp {
   /** The time to calculate time-ago from */
