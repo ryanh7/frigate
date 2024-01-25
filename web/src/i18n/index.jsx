@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
+import languageMessages from './languages'
 
 const LanguageContext = createContext(null);
 
 const getUserLanguage = () => {
-  const languages = ['en', 'zh-CN']
-  return languages.includes(navigator.language) ? navigator.language : languages[0];
+  return navigator.language in languageMessages ? navigator.language : 'en';
 };
 
 export const useLanguage = () => {
@@ -16,14 +16,6 @@ export const useLanguage = () => {
   return context;
 };
 
-const loadMessages = async (language) => {
-  try {
-    const translationModule = await import(`./${language}.json`);
-    return translationModule.default || translationModule;
-  } catch (error) {
-    return {};
-  }
-};
 
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(getUserLanguage());
@@ -31,8 +23,7 @@ export function LanguageProvider({ children }) {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const loadedMessages = await loadMessages(language);
-      setMessages(loadedMessages);
+      setMessages(languageMessages[language]);
     };
 
     fetchMessages();
