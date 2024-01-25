@@ -215,6 +215,7 @@ class TensorRtDetector(DetectionApi):
             cuda.CUctx_flags.CU_CTX_MAP_HOST, detector_config.device
         )
 
+        self.model_type = detector_config.model.model_type
         self.conf_th = 0.4  ##TODO: model config parameter
         self.nms_threshold = 0.4
         err, self.stream = cuda.cuStreamCreate(0)
@@ -223,7 +224,6 @@ class TensorRtDetector(DetectionApi):
         self.input_shape = self._get_input_shape()
         self.height = detector_config.model.height
         self.width = detector_config.model.width
-        self.model_type = detector_config.model.model_type
 
         try:
             self.context = self.engine.create_execution_context()
@@ -253,7 +253,7 @@ class TensorRtDetector(DetectionApi):
         del self.trt_logger
         cuda.cuCtxDestroy(self.cu_ctx)
 
-    def _postprocess_yolov7(self, trt_outputs, conf_th):
+    def _postprocess_yolov7(self, trt_outputs):
         """Postprocess TensorRT outputs.
         # Args
             trt_outputs: a list of 2 or 3 tensors, where each tensor
@@ -267,7 +267,7 @@ class TensorRtDetector(DetectionApi):
         detections = []
         for o in trt_outputs:
             dets = o.reshape((-1, 7))
-            dets = dets[dets[:, 4] * dets[:, 6] >= conf_th]
+            dets = dets[dets[:, 4] * dets[:, 6] >= self.conf_th]
             detections.append(dets)
         detections = np.concatenate(detections, axis=0)
 
@@ -302,13 +302,13 @@ class TensorRtDetector(DetectionApi):
         Processes yolov8 output.
 
         Args:
-        results: array with shape: (1, 84, n, 1) where n depends on yolov8 model size (for 320x320 model n=2100)
+        results: array with shape: (84, n) where n depends on yolov8 model size (for 320x320 model n=2100)
 
         Returns:
         detections: array with shape (20, 6) with 20 rows of (class, confidence, y_min, x_min, y_max, x_max)
         """
 
-        results = np.transpose(np.array(results[0, :, :, 0]))  # array shape (2100, 84)
+        results = np.transpose(np.array(results[0]).reshape((84, -1)))  # array shape (2100, 84)
         scores = np.max(
             results[:, 4:], axis=1
         )  # array shape (2100,); max confidence of each row
