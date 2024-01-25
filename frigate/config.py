@@ -1097,6 +1097,9 @@ class FrigateConfig(FrigateBaseModel):
         default_factory=TimestampStyleConfig,
         title="Global timestamp style configuration.",
     )
+    translations: Dict[str, str] = Field(
+        default_factory=dict, title="Translations."
+    )
 
     def runtime_config(self, plus_api: PlusApi = None) -> FrigateConfig:
         """Merge camera config with globals."""

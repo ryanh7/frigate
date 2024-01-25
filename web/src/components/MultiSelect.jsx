@@ -50,7 +50,7 @@ export default function MultiSelect({ className, title, options, selection, onTo
                   checked={isOptionSelected(item)}
                   onChange={() => onToggle(item)}
                 />
-                {item.replaceAll('_', ' ')}
+                <FormattedMessage id={item} defaultMessage={item.replaceAll('_', ' ')} />
               </label>
               <div className="justify-right">
                 <Button

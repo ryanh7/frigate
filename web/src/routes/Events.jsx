@@ -799,8 +799,12 @@ function Event({
         <div className="m-2 flex grow">
           <div className="flex flex-col grow">
             <div className="capitalize text-lg font-bold">
-              {event.label.replaceAll('_', ' ')}
-              {event.sub_label ? `: ${event.sub_label.replaceAll('_', ' ')}` : null}
+              <FormattedMessage id={event.label} defaultMessage={event.label.replaceAll('_', ' ')} />
+              {event.sub_label ? (
+                <>
+                  : <FormattedMessage id={event.label} defaultMessage={event.sub_label.replaceAll('_', ' ')} />
+                </>
+                ) : null}
             </div>
 
             <div className="text-sm flex">
@@ -816,22 +820,33 @@ function Event({
             </div>
             <div className="capitalize text-sm flex align-center mt-1">
               <Camera className="h-5 w-5 mr-2 inline" />
-              {event.camera.replaceAll('_', ' ')}
+              <FormattedMessage id={event.camera} defaultMessage={event.camera.replaceAll('_', ' ')} />
             </div>
             {event.zones.length ? (
               <div className="capitalize  text-sm flex align-center">
                 <Zone className="w-5 h-5 mr-2 inline" />
-                {event.zones.join(', ').replaceAll('_', ' ')}
+                {event.zones.map((zone, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <FormattedMessage id={zone} defaultMessage={zone.replaceAll('_', ' ')} />
+                      {index < event.zones.length - 1 && ', '}
+                    </Fragment>
+                  )
+                })}
               </div>
             ) : null}
             <div className="capitalize  text-sm flex align-center">
               <Score className="w-5 h-5 mr-2 inline" />
               {(event?.data?.top_score || event.top_score || 0) == 0
-                ? null
-                : `${event.label}: ${((event?.data?.top_score || event.top_score) * 100).toFixed(0)}%`}
+                ? null : (
+                  <Fragment>
+                    <FormattedMessage id={event.label} defaultMessage={event.label} /> : {((event?.data?.top_score || event.top_score) * 100).toFixed(0)}%
+                  </Fragment>)}
               {(event?.data?.sub_label_score || 0) == 0
-                ? null
-                : `, ${event.sub_label}: ${(event?.data?.sub_label_score * 100).toFixed(0)}%`}
+                ? null : (
+                  <Fragment>
+                    <FormattedMessage id={event.sub_label} defaultMessage={event.sub_label} />: {(event?.data?.sub_label_score * 100).toFixed(0)}%
+                  </Fragment>)}
             </div>
           </div>
           <div class="hidden sm:flex flex-col justify-end mr-2">
