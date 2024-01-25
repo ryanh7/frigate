@@ -458,6 +458,7 @@ export default function Events({ path, ...props }) {
             />
           )}
           {(event?.data?.type || 'object') == 'object' &&
+            config.plus.enabled &&
             downloadEvent.end_time &&
             downloadEvent.has_snapshot &&
             !downloadEvent.plus_id && (
@@ -468,7 +469,7 @@ export default function Events({ path, ...props }) {
                 onSelect={() => showSubmitToPlus(downloadEvent.id, downloadEvent.label, downloadEvent.box)}
               />
             )}
-          {downloadEvent.plus_id && (
+          {config.plus.enabled && downloadEvent.plus_id && (
             <MenuItem
               icon={UploadPlus}
               label={'Sent to Frigate+'}
@@ -835,7 +836,7 @@ function Event({
             </div>
           </div>
           <div class="hidden sm:flex flex-col justify-end mr-2">
-            {event.end_time && event.has_snapshot && (event?.data?.type || 'object') == 'object' && (
+            {config.plus.enabled && event.end_time && event.has_snapshot && (event?.data?.type || 'object') == 'object' && (
               <Fragment>
                 {event.plus_id ? (
                   <div className="uppercase text-xs underline">
