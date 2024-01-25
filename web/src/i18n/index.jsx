@@ -18,7 +18,7 @@ export const useLanguage = () => {
 
 const loadMessages = async (language) => {
   try {
-    const translationModule = await import(`./i18n/${language}.json`);
+    const translationModule = await import(`./${language}.json`);
     return translationModule.default || translationModule;
   } catch (error) {
     return {};
