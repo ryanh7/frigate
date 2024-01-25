@@ -4,6 +4,7 @@ import asyncio
 import json
 import logging
 import os
+import math
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
@@ -21,6 +22,7 @@ from frigate.const import (
     DEFAULT_DB_PATH,
     MAX_PRE_CAPTURE,
     REGEX_CAMERA_NAME,
+    REGEX_CAMERA_RATIO,
     YAML_EXT,
 )
 from frigate.detectors import DetectorConfig, ModelConfig
@@ -789,6 +791,7 @@ class CameraConfig(FrigateBaseModel):
     timestamp_style: TimestampStyleConfig = Field(
         default_factory=TimestampStyleConfig, title="Timestamp style configuration."
     )
+    ratio: Optional[str] = Field(title="Aspect ratio", regex=REGEX_CAMERA_RATIO)
     _ffmpeg_cmds: List[Dict[str, List[str]]] = PrivateAttr()
 
     def __init__(self, **config):
@@ -1138,6 +1141,12 @@ class FrigateConfig(FrigateBaseModel):
                 {"name": name, **merged_config}
             )
 
+            if (
+                camera_config.detect.height is not None
+                and camera_config.ratio is not None
+            ):
+                camera_config.detect.width = math.ceil(eval(camera_config.ratio) * camera_config.detect.height)
+            
             if (
                 camera_config.detect.height is None
                 or camera_config.detect.width is None
