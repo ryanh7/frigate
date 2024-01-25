@@ -8,7 +8,7 @@ import { Router } from 'preact-router';
 import Sidebar from './Sidebar';
 import { DarkModeProvider, DrawerProvider } from './context';
 import useSWR from 'swr';
-import LanguageProvider from './i18n'
+import { LanguageProvider } from './i18n'
 
 export default function App() {
   const { data: config } = useSWR('config');
