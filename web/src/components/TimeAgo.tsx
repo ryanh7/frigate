@@ -80,6 +80,6 @@ const TimeAgo: FunctionComponent<IProp> = ({ refreshInterval = 1000, ...rest }):
 
   const timeAgoValue = useMemo(() => timeAgo({ currentTime, ...rest }), [currentTime, rest]);
 
-  return <span><FormattedMessage id={timeAgoValue} defaultMessage={timeAgoValue} /></span>;
+  return <span>{timeAgoValue}</span>;
 };
 export default TimeAgo;
