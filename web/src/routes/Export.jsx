@@ -11,6 +11,7 @@ import { Delete } from '../icons/Delete';
 import LargeDialog from '../components/DialogLarge';
 import VideoPlayer from '../components/VideoPlayer';
 import Dialog from '../components/Dialog';
+import { FormattedMessage } from 'react-intl';
 
 export default function Export() {
   const { data: config } = useSWR('config');
@@ -88,7 +89,7 @@ export default function Export() {
 
   return (
     <div className="space-y-4 p-2 px-4 w-full">
-      <Heading>Export</Heading>
+      <Heading><FormattedMessage id="Export" defaultMessage="Export" /></Heading>
 
       {message.text && (
         <div className={`max-h-20 ${message.error ? 'text-red-500' : 'text-green-500'}`}>{message.text}</div>
@@ -151,7 +152,7 @@ export default function Export() {
               value={camera}
               onChange={(e) => setCamera(e.target.value)}
             >
-              <option value="select">Select A Camera</option>
+              <option value="select"><FormattedMessage id="Select A Camera" defaultMessage="Select A Camera" /></option>
               {Object.keys(config?.cameras || {}).map((item) => (
                 <option key={item} value={item}>
                   {item.replaceAll('_', ' ')}
@@ -163,15 +164,15 @@ export default function Export() {
               value={playback}
               onChange={(e) => setPlayback(e.target.value)}
             >
-              <option value="select">Select A Playback Factor</option>
-              <option value="realtime">Realtime</option>
-              <option value="timelapse_25x">Timelapse</option>
+              <option value="select"><FormattedMessage id="Select A Playback Factor" defaultMessage="Select A Playback Factor" /></option>
+              <option value="realtime"><FormattedMessage id="Realtime" defaultMessage="Realtime" /></option>
+              <option value="timelapse_25x"><FormattedMessage id="Timelapse" defaultMessage="Timelapse" /></option>
             </select>
           </div>
 
           <div>
             <Heading className="py-2" size="sm">
-              From:
+              <FormattedMessage id="Export from:" defaultMessage="From:" />
             </Heading>
             <input
               className="dark:bg-slate-800"
@@ -189,7 +190,7 @@ export default function Export() {
               onChange={(e) => setStartTime(e.target.value)}
             />
             <Heading className="py-2" size="sm">
-              To:
+              <FormattedMessage id="Export to:" defaultMessage="To:" />
             </Heading>
             <input
               className="dark:bg-slate-800"
@@ -208,13 +209,13 @@ export default function Export() {
             />
           </div>
           <Button className="my-4" onClick={() => onHandleExport()}>
-            Submit
+            <FormattedMessage id="Submit" defaultMessage="Submit" />
           </Button>
         </div>
 
         {exports && (
           <div className="p-4 bg-gray-200 dark:bg-gray-800 xl:w-1/2">
-            <Heading size="md">Exports</Heading>
+            <Heading size="md"><FormattedMessage id="Exports" defaultMessage="Exports" /></Heading>
             <Exports
               exports={exports}
               onSetClip={(clip) => setSelectedClip(clip)}

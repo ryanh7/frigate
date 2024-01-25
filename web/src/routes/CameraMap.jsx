@@ -8,6 +8,8 @@ import { useCallback, useMemo, useRef, useState } from 'preact/hooks';
 import { useApiHost } from '../api';
 import useSWR from 'swr';
 import axios from 'axios';
+import { FormattedMessage } from 'react-intl';
+
 export default function CameraMasks({ camera }) {
   const { data: config } = useSWR('config');
   const apiHost = useApiHost();
@@ -314,16 +316,16 @@ ${Object.keys(objectMaskPoints)
 
   return (
     <div className="flex-col space-y-4 p-2 px-4">
-      <Heading size="2xl">{camera} mask & zone creator</Heading>
+      <Heading size="2xl">{camera} <FormattedMessage id="Mask & Zone creator" defaultMessage="Mask & Zone creator" /></Heading>
 
       <Card
         content={
           <div>
-            <p>This tool can help you create masks & zones for your {camera} camera.</p>
+            <p><FormattedMessage id="Mask & Zone creator instructions" defaultMessage="This tool can help you create masks & zones for your {camera} camera." values={{camera}}/></p>
             <ul>
-              <li>Click to add a point.</li>
-              <li>Click and hold on an existing point to move it.</li>
-              <li>Right-Click on an existing point to delete it.</li>
+              <li><FormattedMessage id="Click to add a point." defaultMessage="Click to add a point." /></li>
+              <li><FormattedMessage id="Click and hold on an existing point to move it." defaultMessage="Click and hold on an existing point to move it." /></li>
+              <li><FormattedMessage id="Right-Click on an existing point to delete it." defaultMessage="Right-Click on an existing point to delete it." /></li>
             </ul>
           </div>
         }
@@ -333,8 +335,8 @@ ${Object.keys(objectMaskPoints)
       <Card
         content={
           <p>
-            When done, copy each mask configuration into your <code className="font-mono">config.yml</code> file restart
-            your Frigate instance to save your changes.
+            <FormattedMessage id="Mask & Zone creator warning part 1" defaultMessage="When done, copy each mask configuration into your " /><code className="font-mono">config.yml</code><FormattedMessage id="Mask & Zone creator warning part 2" defaultMessage=" file restart
+            your Frigate instance to save your changes." />
           </p>
         }
         header="Warning"
@@ -588,11 +590,11 @@ function MaskValues({
     <div className="overflow-hidden" onMouseOver={handleMousein} onMouseOut={handleMouseout}>
       <div className="flex space-x-4">
         <Heading className="flex-grow self-center" size="base">
-          {title}
+          <FormattedMessage id={title} defaultMessage={title} />
         </Heading>
-        <Button onClick={onCopy}>Copy</Button>
-        <Button onClick={onCreate}>Add</Button>
-        <Button onClick={onSave}>Save</Button>
+        <Button onClick={onCopy}><FormattedMessage id="Copy" defaultMessage="Copy" /></Button>
+        <Button onClick={onCreate}><FormattedMessage id="Add" defaultMessage="Add" /></Button>
+        <Button onClick={onSave}><FormattedMessage id="Save" defaultMessage="Save" /></Button>
       </div>
       <pre className="relative overflow-auto font-mono text-gray-900 dark:text-gray-100 rounded bg-gray-100 dark:bg-gray-800 p-2">
         {yamlPrefix}
@@ -603,7 +605,7 @@ function MaskValues({
                 {`    ${mainkey}:\n      mask:\n`}
                 {onAdd && showButtons ? (
                   <Button className="absolute -mt-12 right-0 font-sans" data-key={mainkey} onClick={handleAdd}>
-                    {`Add to ${mainkey}`}
+                    <FormattedMessage id="Add to {mainkey}" defaultMessage="Add to {mainkey}" values={{mainkey}}/>
                   </Button>
                 ) : null}
                 {points[mainkey].map((item, subkey) => (
@@ -661,7 +663,7 @@ function Item({ mainkey, subkey, editing, handleEdit, points, showButtons, _hand
           data-subkey={subkey}
           onClick={handleRemove}
         >
-          Remove
+          <FormattedMessage id="Remove" defaultMessage="Remove" />
         </Button>
       ) : null}
     </span>

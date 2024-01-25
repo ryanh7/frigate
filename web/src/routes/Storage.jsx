@@ -7,6 +7,7 @@ import { Table, Tbody, Thead, Tr, Th, Td } from '../components/Table';
 import Link from '../components/Link';
 import Button from '../components/Button';
 import { About } from '../icons/About';
+import { FormattedMessage } from 'react-intl';
 
 const emptyObject = Object.freeze({});
 
@@ -40,12 +41,12 @@ export default function Storage() {
     storage_usage = (
       <Fragment>
         <Tr>
-          <Td>Recordings</Td>
+          <Td><FormattedMessage id="Recordings" defaultMessage="Recordings" /></Td>
           <Td>{getUnitSize(service['storage']['/media/frigate/recordings']['used'])}</Td>
           <Td>{getUnitSize(service['storage']['/media/frigate/recordings']['total'])}</Td>
         </Tr>
         <Tr>
-          <Td>Snapshots</Td>
+          <Td><FormattedMessage id="Snapshots" defaultMessage="Snapshots" /></Td>
           <Td>{getUnitSize(service['storage']['/media/frigate/clips']['used'])}</Td>
           <Td>{getUnitSize(service['storage']['/media/frigate/clips']['total'])}</Td>
         </Tr>
@@ -55,7 +56,7 @@ export default function Storage() {
     storage_usage = (
       <Fragment>
         <Tr>
-          <Td>Recordings & Snapshots</Td>
+          <Td><FormattedMessage id="Recordings & Snapshots" defaultMessage="Recordings & Snapshots" /></Td>
           <Td>{getUnitSize(service['storage']['/media/frigate/recordings']['used'])}</Td>
           <Td>{getUnitSize(service['storage']['/media/frigate/recordings']['total'])}</Td>
         </Tr>
@@ -65,14 +66,14 @@ export default function Storage() {
 
   return (
     <div className="space-y-4 p-2 px-4">
-      <Heading>Storage</Heading>
+      <Heading><FormattedMessage id="Storage" defaultMessage="Storage" /></Heading>
 
       <Fragment>
-        <Heading size="lg">Overview</Heading>
+        <Heading size="lg"><FormattedMessage id="Overview" defaultMessage="Overview" /></Heading>
         <div data-testid="overview-types" className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="dark:bg-gray-800 shadow-md hover:shadow-lg rounded-lg transition-shadow">
             <div className="flex justify-start">
-              <div className="text-lg flex justify-between p-4">Data</div>
+              <div className="text-lg flex justify-between p-4"><FormattedMessage id="Data" defaultMessage="Data" /></div>
               <Button
                 className="rounded-full"
                 type="text"
@@ -86,9 +87,9 @@ export default function Storage() {
               <Table className="w-full">
                 <Thead>
                   <Tr>
-                    <Th>Location</Th>
-                    <Th>Used</Th>
-                    <Th>Total</Th>
+                    <Th><FormattedMessage id="Location" defaultMessage="Location" /></Th>
+                    <Th><FormattedMessage id="Used" defaultMessage="Used" /></Th>
+                    <Th><FormattedMessage id="Total" defaultMessage="Total" /></Th>
                   </Tr>
                 </Thead>
                 <Tbody>{storage_usage}</Tbody>
@@ -97,7 +98,7 @@ export default function Storage() {
           </div>
           <div className="dark:bg-gray-800 shadow-md hover:shadow-lg rounded-lg transition-shadow">
             <div className="flex justify-start">
-              <div className="text-lg flex justify-between p-4">Memory</div>
+              <div className="text-lg flex justify-between p-4"><FormattedMessage id="Memory" defaultMessage="Memory" /></div>
               <Button
                 className="rounded-full"
                 type="text"
@@ -111,9 +112,9 @@ export default function Storage() {
               <Table className="w-full">
                 <Thead>
                   <Tr>
-                    <Th>Location</Th>
-                    <Th>Used</Th>
-                    <Th>Total</Th>
+                    <Th><FormattedMessage id="Location" defaultMessage="Location" /></Th>
+                    <Th><FormattedMessage id="Used" defaultMessage="Used" /></Th>
+                    <Th><FormattedMessage id="Total" defaultMessage="Total" /></Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -134,7 +135,7 @@ export default function Storage() {
         </div>
 
         <div className="flex justify-start">
-          <Heading size="lg">Cameras</Heading>
+          <Heading size="lg"><FormattedMessage id="Cameras" defaultMessage="Cameras" /></Heading>
           <Button
             className="rounded-full"
             type="text"
@@ -154,8 +155,8 @@ export default function Storage() {
                 <Table className="w-full">
                   <Thead>
                     <Tr>
-                      <Th>Usage</Th>
-                      <Th>Stream Bandwidth</Th>
+                      <Th><FormattedMessage id="Usage" defaultMessage="Usage" /></Th>
+                      <Th><FormattedMessage id="Stream Bandwidth" defaultMessage="Stream Bandwidth" /></Th>
                     </Tr>
                   </Thead>
                   <Tbody>

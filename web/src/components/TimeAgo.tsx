@@ -1,5 +1,6 @@
 import { h, FunctionComponent } from 'preact';
 import { useEffect, useMemo, useState } from 'preact/hooks';
+import { FormattedMessage } from 'react-intl';
 
 interface IProp {
   /** The time to calculate time-ago from */
@@ -79,6 +80,6 @@ const TimeAgo: FunctionComponent<IProp> = ({ refreshInterval = 1000, ...rest }):
 
   const timeAgoValue = useMemo(() => timeAgo({ currentTime, ...rest }), [currentTime, rest]);
 
-  return <span>{timeAgoValue}</span>;
+  return <span><FormattedMessage id={timeAgoValue} defaultMessage={timeAgoValue} /></span>;
 };
 export default TimeAgo;

@@ -35,6 +35,7 @@ import { Score } from '../icons/Score';
 import { About } from '../icons/About';
 import MenuIcon from '../icons/Menu';
 import { MenuOpen } from '../icons/MenuOpen';
+import { FormattedMessage } from 'react-intl';
 
 const API_LIMIT = 25;
 
@@ -366,7 +367,7 @@ export default function Events({ path, ...props }) {
 
   return (
     <div className="space-y-4 p-2 px-4 w-full">
-      <Heading>Events</Heading>
+      <Heading><FormattedMessage id="Events" defaultMessage="Events" /></Heading>
       <div className="flex flex-wrap gap-2 items-center">
         <MultiSelect
           className="basis-1/5 cursor-pointer rounded dark:bg-slate-800"
@@ -649,7 +650,7 @@ export default function Events({ path, ...props }) {
           <div>
             <div className="flex">
               <Heading className="py-4" size="sm">
-                Ongoing Events
+                <FormattedMessage id="Ongoing Events" defaultMessage="Ongoing Events" />
               </Heading>
               <Button
                 className="rounded-full"
@@ -702,7 +703,7 @@ export default function Events({ path, ...props }) {
           </div>
         ) : null}
         <Heading className="py-4" size="sm">
-          Past Events
+          <FormattedMessage id="Past Events" defaultMessage="Past Events" />
         </Heading>
         {eventPages ? (
           eventPages.map((page, i) => {
@@ -791,7 +792,7 @@ function Event({
           />
           {event.end_time ? null : (
             <div className="bg-slate-300 dark:bg-slate-700 absolute bottom-0 text-center w-full uppercase text-sm rounded-bl">
-              In progress
+              <FormattedMessage id="In progress" defaultMessage="In progress" />
             </div>
           )}
         </div>

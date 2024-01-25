@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
+import { FormattedMessage } from 'react-intl';
 
 export default function ButtonsTabbed({
   viewModes = [''],
@@ -37,7 +38,7 @@ export default function ButtonsTabbed({
       {viewModes.map((item, i) => {
         return (
           <button key={i} onClick={() => handleClick(i)} className={i === selected ? selectedClassName : className}>
-            {captitalize(item)}
+            <FormattedMessage id={captitalize(item)} defaultMessage={captitalize(item)} />
           </button>
         );
       })}

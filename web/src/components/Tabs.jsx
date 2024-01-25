@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
+import { FormattedMessage } from 'react-intl';
 
 export function Tabs({ children, selectedIndex: selectedIndexProp, onChange, className }) {
   const [selectedIndex, setSelectedIndex] = useState(selectedIndexProp);
@@ -35,7 +36,7 @@ export function TextTab({ selected, text, onClick, disabled }) {
       : 'text-black dark:text-white bg-transparent';
   return (
     <button onClick={onClick} disabled={disabled} className={`rounded-full px-4 py-2 ${selectedStyle}`}>
-      <span>{text}</span>
+      <span><FormattedMessage id={text} defaultMessage={text} /></span>
     </button>
   );
 }

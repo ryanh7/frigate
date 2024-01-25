@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 import { ArrowDropdown } from '../icons/ArrowDropdown';
 import { ArrowDropup } from '../icons/ArrowDropup';
 import Heading from './Heading';
+import { FormattedMessage } from 'react-intl';
 
 const TimePicker = ({ timeRange, onChange }) => {
   const times = timeRange.split(',');
@@ -49,7 +50,7 @@ const TimePicker = ({ timeRange, onChange }) => {
         <div className="px-1 flex justify-between">
           <div>
             <Heading className="text-center" size="sm">
-              After
+              <FormattedMessage id="After" defaultMessage="After" />
             </Heading>
             <div
               className="w-20 border border-gray-400/50 cursor-pointer hide-scroll shadow-md rounded-md"
@@ -71,7 +72,7 @@ const TimePicker = ({ timeRange, onChange }) => {
           </div>
           <div>
             <Heading className="text-center" size="sm">
-              Before
+              <FormattedMessage id="Before" defaultMessage="Before" />
             </Heading>
             <div
               className="w-20 border border-gray-400/50 cursor-pointer hide-scroll shadow-md rounded-md"

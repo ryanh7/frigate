@@ -4,6 +4,7 @@ import Switch from './Switch';
 import { useCallback, useMemo } from 'preact/hooks';
 import { usePersistence } from '../context';
 import AutoUpdatingCameraImage from './AutoUpdatingCameraImage';
+import { FormattedMessage } from 'react-intl';
 
 const emptyObject = Object.freeze({});
 
@@ -61,7 +62,7 @@ export function DebugCamera({ camera }) {
         label='Regions'
         labelPosition='after'
       />
-      <Link href={`/cameras/${camera}/editor`}>Mask & Zone creator</Link>
+      <Link href={`/cameras/${camera}/editor`}><FormattedMessage id="Mask & Zone creator" defaultMessage="Mask & Zone creator" /></Link>
     </div>
   );
 

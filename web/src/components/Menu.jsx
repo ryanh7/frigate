@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import RelativeModal from './RelativeModal';
 import { useCallback } from 'preact/hooks';
+import { FormattedMessage } from 'react-intl';
 
 export default function Menu({ className, children, onDismiss, relativeTo, widthRelative }) {
   return relativeTo ? (
@@ -38,7 +39,7 @@ export function MenuItem({ focus, icon: Icon, label, href, onSelect, value, ...a
           <Icon />
         </div>
       ) : null}
-      <div className="whitespace-nowrap">{label}</div>
+      <div className="whitespace-nowrap"><FormattedMessage id={label} defaultMessage={label} /></div>
     </Element>
   );
 }

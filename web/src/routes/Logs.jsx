@@ -5,6 +5,7 @@ import ButtonsTabbed from '../components/ButtonsTabbed';
 import useSWR from 'swr';
 import Button from '../components/Button';
 import copy from 'copy-to-clipboard';
+import { FormattedMessage } from 'react-intl';
 
 export default function Logs() {
   const [logService, setLogService] = useState('frigate');
@@ -34,12 +35,12 @@ export default function Logs() {
 
   return (
     <div className="space-y-4 p-2 px-4">
-      <Heading>Logs</Heading>
+      <Heading><FormattedMessage id="Logs" defaultMessage="Logs" /></Heading>
 
       <ButtonsTabbed viewModes={['frigate', 'go2rtc', 'nginx']} currentViewMode={logService} setViewMode={setLogService} />
 
       <Button className="" onClick={handleCopyLogs}>
-        Copy to Clipboard
+        <FormattedMessage id="Copy to Clipboard" defaultMessage="Copy to Clipboard" />
       </Button>
 
       <div className="overflow-auto font-mono text-sm text-gray-900 dark:text-gray-100 rounded bg-gray-100 dark:bg-gray-800 p-2 whitespace-pre-wrap">

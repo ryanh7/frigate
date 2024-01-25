@@ -2,6 +2,7 @@ import { h, Fragment } from 'preact';
 import { Link } from 'preact-router/match';
 import { useCallback } from 'preact/hooks';
 import { useDrawer } from '../context';
+import { FormattedMessage } from 'react-intl';
 
 export default function NavigationDrawer({ children, header }) {
   const { showDrawer, setShowDrawer } = useDrawer();
@@ -55,7 +56,7 @@ export function Destination({ className = '', href, text, ...other }) {
 
   return (
     <El activeClassName="bg-blue-500 bg-opacity-50 text-white" {...styleProps} href={href} {...props} {...other}>
-      <div onClick={handleDismiss}>{text}</div>
+      <div onClick={handleDismiss}><FormattedMessage id={text} defaultMessage={text} /></div>
     </El>
   );
 }

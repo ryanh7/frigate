@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import { useMemo } from 'preact/hooks';
 import CameraControlPanel from '../components/CameraControlPanel';
 import { baseUrl } from '../api/baseUrl';
+import { FormattedMessage } from 'react-intl';
 
 export default function Birdseye() {
   const { data: config } = useSWR('config');
@@ -77,7 +78,7 @@ export default function Birdseye() {
     <div className="space-y-4 p-2 px-4">
       <div className="flex justify-between">
         <Heading className="p-2" size="2xl">
-          Birdseye
+          <FormattedMessage id="Birdseye" defaultMessage="Birdseye" />
         </Heading>
 
         {!ptzCameras.length && (
@@ -85,7 +86,7 @@ export default function Birdseye() {
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded hidden md:inline"
             onClick={() => setIsMaxWidth(!isMaxWidth)}
           >
-            Toggle width
+            <FormattedMessage id="Toggle width" defaultMessage="Toggle width" />
           </button>
         )}
 

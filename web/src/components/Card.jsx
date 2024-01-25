@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import Button from './Button';
 import Heading from './Heading';
+import { FormattedMessage } from 'react-intl';
 
 export default function Box({
   buttons = [],
@@ -24,7 +25,7 @@ export default function Box({
       {media || header ? (
         <Element href={href} {...props}>
           {media}
-          <div className="p-4 pb-2">{header ? <Heading size="base">{header}</Heading> : null}</div>
+          <div className="p-4 pb-2">{header ? <Heading size="base"><FormattedMessage id={header} defaultMessage={header} /></Heading> : null}</div>
         </Element>
       ) : null}
       {buttons.length || content || icons.length ? (
@@ -34,7 +35,7 @@ export default function Box({
             <div className="flex space-x-4 -ml-2">
               {buttons.map(({ name, href }) => (
                 <Button key={name} href={href} type="text">
-                  {name}
+                  <FormattedMessage id={name} defaultMessage={name} />
                 </Button>
               ))}
               <div class="flex-grow" />

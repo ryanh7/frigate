@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'preact/hooks';
 import ArrowRight from '../icons/ArrowRight';
 import ArrowRightDouble from '../icons/ArrowRightDouble';
+import { FormattedMessage } from 'react-intl';
 
 const todayTimestamp = new Date().setHours(0, 0, 0, 0).valueOf();
 
@@ -284,7 +285,7 @@ const Calendar = ({ onChange, calendarRef, close, dateRange, children }) => {
         <div className="w-full flex justify-start flex-shrink">
           {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((d, i) => (
             <div key={i} className="w-12 text-xs font-light text-center">
-              {d}
+              <FormattedMessage id={d} defaultMessage={d} />
             </div>
           ))}
         </div>
@@ -317,7 +318,7 @@ const Calendar = ({ onChange, calendarRef, close, dateRange, children }) => {
           </div>
           <div className="w-1/3">
             <div className="text-3xl text-center text-gray-200 font-extralight">{state.year}</div>
-            <div className="text-center text-gray-400 font-extralight">{getMonthStr(state.month)}</div>
+            <div className="text-center text-gray-400 font-extralight"><FormattedMessage id={getMonthStr(state.month)} defaultMessage={getMonthStr(state.month)} /></div>
           </div>
           <div className="w-1/6 relative flex justify-around ">
             <div

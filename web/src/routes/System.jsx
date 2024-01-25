@@ -13,6 +13,7 @@ import TimeAgo from '../components/TimeAgo';
 import copy from 'copy-to-clipboard';
 import { About } from '../icons/About';
 import { WebUI } from '../icons/WebUI';
+import { FormattedMessage } from 'react-intl';
 
 const emptyObject = Object.freeze({});
 
@@ -94,7 +95,7 @@ export default function System() {
     <div className="space-y-4 p-2 px-4">
       <div className="flex justify-between">
         <Heading>
-          System <span className="text-sm">{service.version}</span>
+          <FormattedMessage id="System" defaultMessage="System" /> <span className="text-sm">{service.version}</span>
         </Heading>
         {config && (
           <span class="p-1">
@@ -105,7 +106,7 @@ export default function System() {
               rel="noopener noreferrer"
               href="/api/go2rtc/streams"
             >
-              streams info
+              <FormattedMessage id="streams info" defaultMessage="streams info" />
             </Link>
           </span>
         )}
@@ -114,7 +115,7 @@ export default function System() {
       {service.last_updated && (
         <p>
           <span>
-            Last refreshed: <TimeAgo time={service.last_updated * 1000} dense />
+            <FormattedMessage id="Last refreshed:" defaultMessage="Last refreshed:" /> <TimeAgo time={service.last_updated * 1000} dense />
           </span>
         </p>
       )}
@@ -122,13 +123,13 @@ export default function System() {
       {state.showFfprobe && (
         <Dialog>
           <div className="p-4 mb-2 max-h-96 whitespace-pre-line overflow-auto">
-            <Heading size="lg">Ffprobe Output</Heading>
+            <Heading size="lg"><FormattedMessage id="Ffprobe Output" defaultMessage="Ffprobe Output" /></Heading>
             {state.ffprobe != '' ? (
               <div>
                 {state.ffprobe.map((stream, idx) => (
                   <div key={idx} className="mb-2 max-h-96 whitespace-pre-line">
-                    <div>Stream {idx}:</div>
-                    <div className="px-2">Return Code: {stream.return_code}</div>
+                    <div><FormattedMessage id="Stream" defaultMessage="Stream" /> {idx}:</div>
+                    <div className="px-2"><FormattedMessage id="Return Code:" defaultMessage="Return Code:" /> {stream.return_code}</div>
                     <br />
                     {stream.return_code == 0 ? (
                       <div>
@@ -136,20 +137,20 @@ export default function System() {
                           <div className="px-2" key={idx}>
                             {codec.width ? (
                               <div>
-                                <div>Video:</div>
+                                <div><FormattedMessage id="Video:" defaultMessage="Video:" /></div>
                                 <br />
-                                <div>Codec: {codec.codec_long_name}</div>
+                                <div><FormattedMessage id="Codec:" defaultMessage="Codec:" /> {codec.codec_long_name}</div>
                                 <div>
-                                  Resolution: {codec.width}x{codec.height}
+                                <FormattedMessage id="Resolution:" defaultMessage="Resolution:" /> {codec.width}x{codec.height}
                                 </div>
-                                <div>FPS: {codec.avg_frame_rate == '0/0' ? 'Unknown' : codec.avg_frame_rate}</div>
+                                <div><FormattedMessage id="FPS:" defaultMessage="FPS:" /> {codec.avg_frame_rate == '0/0' ? 'Unknown' : codec.avg_frame_rate}</div>
                                 <br />
                               </div>
                             ) : (
                               <div>
-                                <div>Audio:</div>
+                                <div><FormattedMessage id="Audio:" defaultMessage="Audio:" /></div>
                                 <br />
-                                <div>Codec: {codec.codec_long_name}</div>
+                                <div><FormattedMessage id="Codec:" defaultMessage="Codec:" /> {codec.codec_long_name}</div>
                                 <br />
                               </div>
                             )}
@@ -158,7 +159,7 @@ export default function System() {
                       </div>
                     ) : (
                       <div className="px-2">
-                        <div>Error: {stream.stderr}</div>
+                        <div><FormattedMessage id="Error:" defaultMessage="Error:" /> {stream.stderr}</div>
                       </div>
                     )}
                   </div>
@@ -170,14 +171,14 @@ export default function System() {
           </div>
           <div className="p-2 flex justify-start flex-row-reverse space-x-2">
             <Button className="ml-2" onClick={() => onCopyFfprobe()} type="text">
-              Copy
+              <FormattedMessage id="Copy" defaultMessage="Copy" />
             </Button>
             <Button
               className="ml-2"
               onClick={() => setState({ ...state, ffprobe: '', showFfprobe: false })}
               type="text"
             >
-              Close
+              <FormattedMessage id="Close" defaultMessage="Close" />
             </Button>
           </div>
         </Dialog>
@@ -186,10 +187,10 @@ export default function System() {
       {state.showVainfo && (
         <Dialog>
           <div className="p-4 overflow-auto whitespace-pre-line">
-            <Heading size="lg">Vainfo Output</Heading>
+            <Heading size="lg"><FormattedMessage id="Vainfo Output" defaultMessage="Vainfo Output" /></Heading>
             {state.vainfo != '' ? (
               <div className="mb-2 max-h-96 whitespace-pre-line">
-                <div className="">Return Code: {state.vainfo.return_code}</div>
+                <div className=""><FormattedMessage id="Return Code:" defaultMessage="Return Code:" /> {state.vainfo.return_code}</div>
                 <br />
                 <div className="">Process {state.vainfo.return_code == 0 ? 'Output' : 'Error'}:</div>
                 <br />
@@ -201,10 +202,10 @@ export default function System() {
           </div>
           <div className="p-2 flex justify-start flex-row-reverse space-x-2 whitespace-pre-wrap">
             <Button className="ml-2" onClick={() => onCopyVainfo()} type="text">
-              Copy
+              <FormattedMessage id="Copy" defaultMessage="Copy" />
             </Button>
             <Button className="ml-2" onClick={() => setState({ ...state, vainfo: '', showVainfo: false })} type="text">
-              Close
+              <FormattedMessage id="Close" defaultMessage="Close" />
             </Button>
           </div>
         </Dialog>
@@ -218,7 +219,7 @@ export default function System() {
         <Fragment>
           <div className="flex justify-start">
             <Heading className="self-center" size="lg">
-              Detectors
+              <FormattedMessage id="Detectors" defaultMessage="Detectors" />
             </Heading>
             <Button
               className="rounded-full"
@@ -237,11 +238,11 @@ export default function System() {
                   <Table className="w-full">
                     <Thead>
                       <Tr>
-                        <Th>P-ID</Th>
-                        <Th>Inference Speed</Th>
-                        <Th>CPU %</Th>
-                        <Th>Memory %</Th>
-                        {config.telemetry.network_bandwidth && <Th>Network Bandwidth</Th>}
+                        <Th><FormattedMessage id="P-ID" defaultMessage="P-ID" /></Th>
+                        <Th><FormattedMessage id="Inference Speed" defaultMessage="Inference Speed" /></Th>
+                        <Th><FormattedMessage id="CPU %" defaultMessage="CPU %" /></Th>
+                        <Th><FormattedMessage id="Memory %" defaultMessage="Memory %" /></Th>
+                        {config.telemetry.network_bandwidth && <Th><FormattedMessage id="Network Bandwidth" defaultMessage="Network Bandwidth" /></Th>}
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -264,7 +265,7 @@ export default function System() {
           <div className="text-lg flex justify-between">
             <div className="flex justify-start">
               <Heading className="self-center" size="lg">
-                GPUs
+                <FormattedMessage id="GPUs" defaultMessage="GPUs" />
               </Heading>
               <Button
                 className="rounded-full"
@@ -300,10 +301,10 @@ export default function System() {
                       <Table className="w-full">
                         <Thead>
                           <Tr>
-                            <Th>GPU %</Th>
-                            <Th>Memory %</Th>
-                            {'dec' in gpu_usages[gpu] && <Th>Decoder %</Th>}
-                            {'enc' in gpu_usages[gpu] && <Th>Encoder %</Th>}
+                            <Th><FormattedMessage id="GPU %" defaultMessage="GPU %" /></Th>
+                            <Th><FormattedMessage id="GPU Memory %" defaultMessage="Memory %" /></Th>
+                            {'dec' in gpu_usages[gpu] && <Th><FormattedMessage id=">Decoder %" defaultMessage=">Decoder %" /></Th>}
+                            {'enc' in gpu_usages[gpu] && <Th><FormattedMessage id="Encoder %" defaultMessage="Encoder %" /></Th>}
                           </Tr>
                         </Thead>
                         <Tbody>
@@ -324,7 +325,7 @@ export default function System() {
 
           <div className="flex justify-start">
             <Heading className="self-center" size="lg">
-              Cameras
+              <FormattedMessage id="Cameras" defaultMessage="Cameras" />
             </Heading>
             <Button
               className="rounded-full"
@@ -364,18 +365,18 @@ export default function System() {
                         <Table className="w-full">
                           <Thead>
                             <Tr>
-                              <Th>Process</Th>
-                              <Th>P-ID</Th>
-                              <Th>FPS</Th>
-                              <Th>CPU %</Th>
-                              <Th>Memory %</Th>
-                              {config.telemetry.network_bandwidth && <Th>Network Bandwidth</Th>}
+                              <Th><FormattedMessage id="Process" defaultMessage="Process" /></Th>
+                              <Th><FormattedMessage id="P-ID" defaultMessage="P-ID" /></Th>
+                              <Th><FormattedMessage id="FPS" defaultMessage="FPS" /></Th>
+                              <Th><FormattedMessage id="CPU %" defaultMessage="CPU %" /></Th>
+                              <Th><FormattedMessage id="Memory %" defaultMessage="Memory %" /></Th>
+                              {config.telemetry.network_bandwidth && <Th><FormattedMessage id="Network Bandwidth" defaultMessage="Network Bandwidth" /></Th>}
                             </Tr>
                           </Thead>
                           <Tbody>
                             <Tr key="ffmpeg" index="0">
                               <Td>
-                                ffmpeg
+                                <FormattedMessage id="Process ffmpeg" defaultMessage="ffmpeg" />
                                 <Button
                                   className="rounded-full"
                                   type="text"
@@ -395,7 +396,7 @@ export default function System() {
                               )}
                             </Tr>
                             <Tr key="capture" index="1">
-                              <Td>Capture</Td>
+                              <Td><FormattedMessage id="Capture" defaultMessage="Capture" /></Td>
                               <Td>{cameras[camera]['capture_pid'] || '- '}</Td>
                               <Td>{cameras[camera]['process_fps'] || '- '}</Td>
                               <Td>{cpu_usages[cameras[camera]['capture_pid']]?.['cpu'] || '- '}%</Td>
@@ -403,7 +404,7 @@ export default function System() {
                               {config.telemetry.network_bandwidth && <Td>-</Td>}
                             </Tr>
                             <Tr key="detect" index="2">
-                              <Td>Detect</Td>
+                              <Td><FormattedMessage id="Detect" defaultMessage="Detect" /></Td>
                               <Td>{cameras[camera]['pid'] || '- '}</Td>
 
                               {(() => {
@@ -434,7 +435,7 @@ export default function System() {
 
           <div className="flex justify-start">
             <Heading className="self-center" size="lg">
-              Other Processes
+              <FormattedMessage id="Other Processes" defaultMessage="Other Processes" />
             </Heading>
             <Button
               className="rounded-full"
@@ -449,17 +450,17 @@ export default function System() {
             {processesNames.map((process) => (
               <div key={process} className="dark:bg-gray-800 shadow-md hover:shadow-lg rounded-lg transition-shadow">
                 <div className="capitalize text-lg flex justify-between p-4">
-                  <div className="text-lg flex justify-between">{process}</div>
+                  <div className="text-lg flex justify-between"><FormattedMessage id={process} defaultMessage={process} /></div>
                 </div>
                 <div className="p-2">
                   <Table className="w-full">
                     <Thead>
                       <Tr>
-                        <Th>P-ID</Th>
-                        <Th>CPU %</Th>
-                        <Th>Avg CPU %</Th>
-                        <Th>Memory %</Th>
-                        {config.telemetry.network_bandwidth && <Th>Network Bandwidth</Th>}
+                        <Th><FormattedMessage id="P-ID" defaultMessage="P-ID" /></Th>
+                        <Th><FormattedMessage id="CPU %" defaultMessage="CPU %" /></Th>
+                        <Th><FormattedMessage id="Avg CPU %" defaultMessage="Avg CPU %" /></Th>
+                        <Th><FormattedMessage id="Memory %" defaultMessage="Memory %" /></Th>
+                        {config.telemetry.network_bandwidth && <Th><FormattedMessage id="Network Bandwidth" defaultMessage="Network Bandwidth" /></Th>}
                       </Tr>
                     </Thead>
                     <Tbody>

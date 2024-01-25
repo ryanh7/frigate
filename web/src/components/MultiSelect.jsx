@@ -5,6 +5,7 @@ import { ArrowDropdown } from '../icons/ArrowDropdown';
 import Heading from './Heading';
 import Button from './Button';
 import SelectOnlyIcon from '../icons/SelectOnly';
+import { FormattedMessage } from 'react-intl';
 
 export default function MultiSelect({ className, title, options, selection, onToggle, onShowAll, onSelectSingle }) {
   const popupRef = useRef(null);
@@ -21,7 +22,7 @@ export default function MultiSelect({ className, title, options, selection, onTo
   return (
     <div className={`${className} p-2`} ref={popupRef}>
       <div className="flex justify-between min-w-[120px]" onClick={() => setState({ showMenu: true })}>
-        <label>{title}</label>
+        <label><FormattedMessage id={title} defaultMessage={title} /></label>
         <ArrowDropdown className="w-6" />
       </div>
       {state.showMenu ? (
@@ -32,10 +33,10 @@ export default function MultiSelect({ className, title, options, selection, onTo
         >
           <div className="flex flex-wrap justify-between items-center">
             <Heading className="p-4 justify-center" size="md">
-              {title}
+              <FormattedMessage id={title} defaultMessage={title} />
             </Heading>
             <Button tabindex="false" className="mx-4" onClick={() => onShowAll()}>
-              Show All
+              <FormattedMessage id="Show All" defaultMessage="Show All" />
             </Button>
           </div>
           {options.map((item) => (

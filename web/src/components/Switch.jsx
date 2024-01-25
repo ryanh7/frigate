@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
+import { FormattedMessage } from 'react-intl';
 
 export default function Switch({ className, checked, id, onChange, label, labelPosition = 'before' }) {
   const [isFocused, setFocused] = useState(false);
@@ -25,7 +26,7 @@ export default function Switch({ className, checked, id, onChange, label, labelP
     >
       {label && labelPosition === 'before' ? (
         <div data-testid={`${id}-label`} className="inline-flex flex-grow">
-          {label}
+          <FormattedMessage id={label} defaultMessage={label} />
         </div>
       ) : null}
       <div
@@ -60,7 +61,7 @@ export default function Switch({ className, checked, id, onChange, label, labelP
       </div>
       {label && labelPosition !== 'before' ? (
         <div data-testid={`${id}-label`} class="inline-flex flex-grow">
-          {label}
+          <FormattedMessage id={label} defaultMessage={label} />
         </div>
       ) : null}
     </label>

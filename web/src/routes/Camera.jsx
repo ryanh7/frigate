@@ -17,6 +17,7 @@ import WebRtcPlayer from '../components/WebRtcPlayer';
 import '../components/MsePlayer';
 import CameraControlPanel from '../components/CameraControlPanel';
 import { baseUrl } from '../api/baseUrl';
+import { FormattedMessage } from 'react-intl';
 
 const emptyObject = Object.freeze({});
 
@@ -109,7 +110,7 @@ export default function Camera({ camera }) {
         label="Regions"
         labelPosition="after"
       />
-      <Link href={`/cameras/${camera}/editor`}>Mask & Zone creator</Link>
+      <Link href={`/cameras/${camera}/editor`}><FormattedMessage id="Mask & Zone creator" defaultMessage="Mask & Zone creator" /></Link>
     </div>
   ) : null;
 
@@ -166,7 +167,7 @@ export default function Camera({ camera }) {
           <span className="w-5 h-5">
             <SettingsIcon />
           </span>{' '}
-          <span>{showSettings ? 'Hide' : 'Show'} Options</span>
+          <span><FormattedMessage id={`${showSettings ? 'Hide' : 'Show'  } Options`} defaultMessage={`${showSettings ? 'Hide' : 'Show'  } Options`} /></span>
         </Button>
         {showSettings ? <Card header="Options" elevated={false} content={optionContent} /> : null}
       </Fragment>
@@ -198,13 +199,13 @@ export default function Camera({ camera }) {
 
       {cameraConfig?.onvif?.host && (
         <div className="dark:bg-gray-800 shadow-md hover:shadow-lg rounded-lg transition-shadow p-4 w-full sm:w-min">
-          <Heading size="sm">Control Panel</Heading>
+          <Heading size="sm"><FormattedMessage id="Control Panel" defaultMessage="Control Panel" /></Heading>
           <CameraControlPanel camera={camera} />
         </div>
       )}
 
       <div className="space-y-4">
-        <Heading size="sm">Tracked objects</Heading>
+        <Heading size="sm"><FormattedMessage id="Tracked objects" defaultMessage="Tracked objects" /></Heading>
         <div className="flex flex-wrap justify-start">
           {(trackedLabels || []).map((objectType) => (
             <Card

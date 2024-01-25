@@ -9,6 +9,7 @@ import Button from '../components/Button';
 import { editor, Uri } from 'monaco-editor';
 import { setDiagnosticsOptions } from 'monaco-yaml';
 import copy from 'copy-to-clipboard';
+import { FormattedMessage } from 'react-intl';
 
 export default function Config() {
   const apiHost = useApiHost();
@@ -95,22 +96,22 @@ export default function Config() {
   return (
     <div className="space-y-4 p-2 px-4 h-full">
       <div className="flex justify-between">
-        <Heading>Config</Heading>
+        <Heading><FormattedMessage id="Config" defaultMessage="Config" /></Heading>
         <div>
           <Button className="mx-2" onClick={(e) => handleCopyConfig(e)}>
-            Copy Config
+            <FormattedMessage id="Copy Config" defaultMessage="Copy Config" />
           </Button>
           <Button className="mx-2" onClick={(e) => onHandleSaveConfig(e, 'restart')}>
-            Save & Restart
+            <FormattedMessage id="Save & Restart" defaultMessage="Save & Restart" />
           </Button>
           <Button className="mx-2" onClick={(e) => onHandleSaveConfig(e, 'saveonly')}>
-            Save Only
+            <FormattedMessage id="Save Only" defaultMessage="Save Only" />
           </Button>
         </div>
       </div>
 
-      {success && <div className="max-h-20 text-green-500">{success}</div>}
-      {error && <div className="p-4 overflow-scroll text-red-500 whitespace-pre-wrap">{error}</div>}
+      {success && <div className="max-h-20 text-green-500"><FormattedMessage id={success} defaultMessage={success} /></div>}
+      {error && <div className="p-4 overflow-scroll text-red-500 whitespace-pre-wrap"><FormattedMessage id={error} defaultMessage={error} /></div>}
 
       <div id="container" className="h-full" />
     </div>

@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { FormattedMessage } from 'react-intl';
 
 const TIP_SPACE = 20;
 
@@ -55,7 +56,7 @@ export default function Tooltip({ relativeTo, text, capitalize }) {
       ref={ref}
       style={position}
     >
-      {text}
+      <FormattedMessage id={text} defaultMessage={text} />
     </div>
   );
 
