@@ -348,7 +348,7 @@ export default function System() {
                       className="dark:bg-gray-800 shadow-md hover:shadow-lg rounded-lg transition-shadow"
                     >
                       <div className="capitalize text-lg flex justify-between p-4">
-                        <Link href={`/cameras/${camera}`}>{camera.replaceAll('_', ' ')}</Link>
+                        <Link href={`/cameras/${camera}`}><FormattedMessage id={camera} defaultMessage={camera.replaceAll('_', ' ')} /></Link>
                         <div className="flex">
                           {config.cameras[camera]['webui_url'] && (
                             <Button href={config.cameras[camera]['webui_url']} target="_blank">

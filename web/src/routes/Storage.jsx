@@ -149,7 +149,7 @@ export default function Storage() {
           {Object.entries(storage).map(([name, camera]) => (
             <div key={name} className="dark:bg-gray-800 shadow-md hover:shadow-lg rounded-lg transition-shadow">
               <div className="capitalize text-lg flex justify-between p-4">
-                <Link href={`/cameras/${name}`}>{name.replaceAll('_', ' ')}</Link>
+                <Link href={`/cameras/${name}`}><FormattedMessage id={name} defaultMessage={name.replaceAll('_', ' ')} /></Link>
               </div>
               <div className="p-2">
                 <Table className="w-full">
