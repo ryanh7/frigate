@@ -178,7 +178,7 @@ export default function Camera({ camera }) {
     <div className="space-y-4 p-2 px-4">
       <div className="flex justify-between">
         <Heading className="p-2" size="2xl">
-          {camera.replaceAll('_', ' ')}
+          <FormattedMessage id={camera} defaultMessage={camera.replaceAll('_', ' ')} />
         </Heading>
         <select
           className="basis-1/8 cursor-pointer rounded dark:bg-slate-800"

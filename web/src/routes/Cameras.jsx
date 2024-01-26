@@ -16,6 +16,7 @@ import Dialog from '../components/Dialog';
 import Switch from '../components/Switch';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
+import { FormattedMessage } from 'react-intl';
 
 export default function Cameras() {
   const { data: config } = useSWR('config');
@@ -168,7 +169,7 @@ function Camera({ name, config, availableWidth }) {
           </div>
           <div className="p-2 flex justify-start flex-row-reverse space-x-2">
             <Button className="ml-2" onClick={() => setCameraOptions('')} type="text">
-              Close
+              <FormattedMessage id="Close" defaultMessage="Close" />
             </Button>
           </div>
         </Dialog>

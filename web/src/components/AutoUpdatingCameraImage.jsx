@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import CameraImage from './CameraImage';
 import { useCallback, useState } from 'preact/hooks';
+import { FormattedMessage } from 'react-intl';
 
 const MIN_LOAD_TIMEOUT_MS = 200;
 
@@ -22,7 +23,7 @@ export default function AutoUpdatingCameraImage({ camera, searchParams = '', sho
   return (
     <div className={className}>
       <CameraImage camera={camera} onload={handleLoad} searchParams={`cache=${key}&${searchParams}`} />
-      {showFps ? <span className="text-xs">Displaying at {fps}fps</span> : null}
+      {showFps ? <span className="text-xs"><FormattedMessage id="Displaying at" defaultMessage="Displaying at" /> {fps}fps</span> : null}
     </div>
   );
 }
