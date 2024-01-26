@@ -19,6 +19,7 @@ import Menu from '../icons/Menu';
 import MenuOpen from '../icons/MenuOpen';
 import { useApiHost } from '../api';
 import useSWR from 'swr';
+import { FormattedMessage } from 'react-intl';
 
 export default function RecordingPlaylist({ camera, recordings, selectedDate }) {
   const [active, setActive] = useState(true);
@@ -113,7 +114,7 @@ export function DayOfEvents({ camera, day, hours }) {
                 {hour.hour}:00
               </Link>
             </div>
-            <div className="flex-1 text-right">{hour.events} Events</div>
+            <div className="flex-1 text-right">{hour.events} <FormattedMessage id="Events" defaultMessage="Events" /></div>
           </div>
           {eventMap[`${day}-${hour.hour}`].map((event) => (
             <EventCard key={event.id} camera={camera} event={event} />
@@ -131,7 +132,7 @@ export function ExpandableList({ title, events = 0, children, selected = false }
     <div className={`w-full text-sm ${active ? 'border-b border-white border-opacity-50' : ''}`}>
       <div className="flex items-center w-full p-2 cursor-pointer md:text-lg" onClick={toggle}>
         <div className="flex-1 font-bold">{title}</div>
-        <div className="flex-1 text-right mr-4">{events} Events</div>
+        <div className="flex-1 text-right mr-4">{events} <FormattedMessage id="Events" defaultMessage="Events" /></div>
         <div className="w-6 md:w-10 h-6 md:h-10">{active ? <ArrowDropup /> : <ArrowDropdown />}</div>
       </div>
       {/* Only render the child when expanded to lazy load events for the day */}
@@ -159,9 +160,9 @@ export function EventCard({ camera, event }) {
           <div className="w-full text-gray-700 font-semibold relative pt-0">
             <div className="flex flex-row items-center">
               <div className="flex-1">
-                <div className="text-2xl text-white leading-tight capitalize">{event.label}</div>
-                <div className="text-xs md:text-normal text-gray-300">Start: {format(start, 'HH:mm:ss')}</div>
-                <div className="text-xs md:text-normal text-gray-300">Duration: {duration}</div>
+                <div className="text-2xl text-white leading-tight capitalize"><FormattedMessage id={event.label} defaultMessage={event.label} /></div>
+                <div className="text-xs md:text-normal text-gray-300"><FormattedMessage id="Start:" defaultMessage="Start:" /> {format(start, 'HH:mm:ss')}</div>
+                <div className="text-xs md:text-normal text-gray-300"><FormattedMessage id="Duration:" defaultMessage="Duration:" /> {duration}</div>
               </div>
               <div className="text-lg text-white text-right leading-tight">
                 {((event?.data?.top_score || event.top_score) * 100).toFixed(1)}%

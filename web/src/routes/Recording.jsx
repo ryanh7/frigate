@@ -7,6 +7,7 @@ import RecordingPlaylist from '../components/RecordingPlaylist';
 import VideoPlayer from '../components/VideoPlayer';
 import { useApiHost } from '../api';
 import useSWR from 'swr';
+import { FormattedMessage } from 'react-intl';
 
 export default function Recording({ camera, date, hour = '00', minute = '00', second = '00' }) {
   const { data: config } = useSWR('config');
@@ -135,8 +136,8 @@ export default function Recording({ camera, date, hour = '00', minute = '00', se
 
   return (
     <div className="space-y-4 p-2 px-4">
-      <Heading>{camera.replaceAll('_', ' ')} Recordings</Heading>
-      <div className="text-xs">Dates and times are based on the timezone {timezone}</div>
+      <Heading><FormattedMessage id={camera} defaultMessage={camera.replaceAll('_', ' ')} /> <FormattedMessage id="Recordings" defaultMessage="Recordings" /></Heading>
+      <div className="text-xs"><FormattedMessage id="Dates and times are based on the timezone" defaultMessage="Dates and times are based on the timezone" /> {timezone}</div>
 
       <VideoPlayer
         options={{
