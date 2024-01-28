@@ -481,12 +481,12 @@ class ZoneConfig(BaseModel):
 
         if isinstance(coordinates, list):
             self._contour = np.array(
-                [[int(p.split(",")[0]), int(p.split(",")[1])] for p in coordinates]
+                [[float(p.split(",")[0]), float(p.split(",")[1])] for p in coordinates]
             )
         elif isinstance(coordinates, str):
             points = coordinates.split(",")
             self._contour = np.array(
-                [[int(points[i]), int(points[i + 1])] for i in range(0, len(points), 2)]
+                [[float(points[i]), float(points[i + 1])] for i in range(0, len(points), 2)]
             )
         else:
             self._contour = np.array([])
@@ -1175,6 +1175,9 @@ class FrigateConfig(FrigateBaseModel):
                             if stream_info.get("height")
                             else DEFAULT_DETECT_DIMENSIONS["height"]
                         )
+            
+            for zone_config in camera_config.zones.values():
+                zone_config._contour = np.round(zone_config._contour * np.array([camera_config.detect.width, camera_config.detect.height])).astype(int)
 
             # Default min_initialized configuration
             min_initialized = camera_config.detect.fps / 2
