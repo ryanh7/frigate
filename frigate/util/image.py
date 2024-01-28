@@ -3,7 +3,6 @@
 import datetime
 import logging
 from abc import ABC, abstractmethod
-import math
 from multiprocessing import shared_memory
 from string import printable
 from typing import AnyStr, Optional
@@ -681,9 +680,9 @@ def create_mask(frame_shape, mask):
 
 
 def add_mask(mask, mask_img):
-    height, width = mask_img.shape()
+    height, width = mask_img.shape
     points = mask.split(",")
     contour = np.array(
-        [[math.round(float(points[i]) * height), math.round(float(points[i + 1]) * width)] for i in range(0, len(points), 2)]
+        [[round(float(points[i]) * width), round(float(points[i + 1]) * height)] for i in range(0, len(points), 2)]
     )
     cv2.fillPoly(mask_img, pts=[contour], color=(0))

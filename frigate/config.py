@@ -1175,6 +1175,9 @@ class FrigateConfig(FrigateBaseModel):
                             if stream_info.get("height")
                             else DEFAULT_DETECT_DIMENSIONS["height"]
                         )
+            
+            for zone_config in camera_config.zones.values():
+                zone_config._contour = np.round(zone_config._contour * np.array([camera_config.detect.width, camera_config.detect.height])).astype(int)
 
             # Default min_initialized configuration
             min_initialized = camera_config.detect.fps / 2
