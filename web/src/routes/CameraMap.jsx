@@ -28,14 +28,14 @@ export default function CameraMasks({ camera }) {
 
   const [motionMaskPoints, setMotionMaskPoints] = useState(
     Array.isArray(motionMask)
-      ? motionMask.map((mask) => getPolylinePoints(mask))
+      ? motionMask.map((mask) => getPolylinePoints(mask, height, width))
       : motionMask
-      ? [getPolylinePoints(motionMask)]
+      ? [getPolylinePoints(motionMask, height, width)]
       : []
   );
 
   const [zonePoints, setZonePoints] = useState(
-    Object.keys(zones).reduce((memo, zone) => ({ ...memo, [zone]: getPolylinePoints(zones[zone].coordinates) }), {})
+    Object.keys(zones).reduce((memo, zone) => ({ ...memo, [zone]: getPolylinePoints(zones[zone].coordinates, height, width) }), {})
   );
 
   const [objectMaskPoints, setObjectMaskPoints] = useState(
@@ -43,9 +43,9 @@ export default function CameraMasks({ camera }) {
       (memo, name) => ({
         ...memo,
         [name]: Array.isArray(objectFilters[name].mask)
-          ? objectFilters[name].mask.map((mask) => getPolylinePoints(mask))
+          ? objectFilters[name].mask.map((mask) => getPolylinePoints(mask, height, width))
           : objectFilters[name].mask
-          ? [getPolylinePoints(objectFilters[name].mask)]
+          ? [getPolylinePoints(objectFilters[name].mask, height, width)]
           : [],
       }),
       {}
@@ -100,7 +100,7 @@ export default function CameraMasks({ camera }) {
   const handleCopyMotionMasks = useCallback(() => {
     const textToCopy = `  motion:
       mask:
-  ${motionMaskPoints.map((mask) => `      - ${polylinePointsToPolyline(mask)}`).join('\n')}`;
+  ${motionMaskPoints.map((mask) => `      - ${polylinePointsToPolyline(mask, height, width)}`).join('\n')}`;
 
     if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
       // Use Clipboard API if available
@@ -130,7 +130,7 @@ export default function CameraMasks({ camera }) {
   const handleSaveMotionMasks = useCallback(async () => {
     try {
       const queryParameters = motionMaskPoints
-        .map((mask, index) => `cameras.${camera}.motion.mask.${index}=${polylinePointsToPolyline(mask)}`)
+        .map((mask, index) => `cameras.${camera}.motion.mask.${index}=${polylinePointsToPolyline(mask, height, width)}`)
         .join('&');
       const endpoint = `config/set?${queryParameters}`;
       const response = await axios.put(endpoint);
@@ -176,7 +176,7 @@ export default function CameraMasks({ camera }) {
 ${Object.keys(zonePoints)
   .map(
     (zoneName) => `    ${zoneName}:
-      coordinates: ${polylinePointsToPolyline(zonePoints[zoneName])}`
+      coordinates: ${polylinePointsToPolyline(zonePoints[zoneName], height, width)}`
   )
   .join('\n')}`;
 
@@ -210,7 +210,7 @@ ${Object.keys(zonePoints)
       const queryParameters = Object.keys(zonePoints)
         .map(
           (zoneName) =>
-            `cameras.${camera}.zones.${zoneName}.coordinates=${polylinePointsToPolyline(zonePoints[zoneName])}`
+            `cameras.${camera}.zones.${zoneName}.coordinates=${polylinePointsToPolyline(zonePoints[zoneName], height, width)}`
         )
         .join('&');
       const endpoint = `config/set?${queryParameters}`;
@@ -259,12 +259,12 @@ ${Object.keys(objectMaskPoints)
   .map((objectName) =>
     objectMaskPoints[objectName].length
       ? `      ${objectName}:
-        mask: ${polylinePointsToPolyline(objectMaskPoints[objectName])}`
+        mask: ${polylinePointsToPolyline(objectMaskPoints[objectName], height, width)}`
       : ''
   )
   .filter(Boolean)
   .join('\n')}`);
-  }, [objectMaskPoints]);
+  }, [objectMaskPoints, height, width]);
 
   const handleSaveObjectMasks = useCallback(async () => {
     try {
@@ -273,7 +273,7 @@ ${Object.keys(objectMaskPoints)
         .map(
           (objectName, index) =>
             `cameras.${camera}.objects.filters.${objectName}.mask.${index}=${polylinePointsToPolyline(
-              objectMaskPoints[objectName]
+              objectMaskPoints[objectName], height, width
             )}`
         )
         .join('&');
@@ -373,6 +373,8 @@ ${Object.keys(objectMaskPoints)
           points={motionMaskPoints}
           yamlPrefix={'motion:\n  mask:'}
           yamlKeyPrefix={maskYamlKeyPrefix}
+          height={height}
+          width={width}
         />
 
         <MaskValues
@@ -386,6 +388,8 @@ ${Object.keys(objectMaskPoints)
           points={zonePoints}
           yamlPrefix="zones:"
           yamlKeyPrefix={zoneYamlKeyPrefix}
+          height={height}
+          width={width}
         />
 
         <MaskValues
@@ -401,6 +405,8 @@ ${Object.keys(objectMaskPoints)
           points={objectMaskPoints}
           yamlPrefix={'objects:\n  filters:'}
           yamlKeyPrefix={objectYamlKeyPrefix}
+          height={height}
+          width={width}
         />
       </div>
     </div>
@@ -542,6 +548,8 @@ function MaskValues({
   points,
   yamlPrefix,
   yamlKeyPrefix,
+  height,
+  width,
 }) {
   const [showButtons, setShowButtons] = useState(false);
 
@@ -617,6 +625,8 @@ function MaskValues({
                     points={item}
                     showButtons={showButtons}
                     yamlKeyPrefix={yamlKeyPrefix}
+                    height={height}
+                    width={width}
                   />
                 ))}
               </div>
@@ -633,6 +643,8 @@ function MaskValues({
               points={points[mainkey]}
               showButtons={showButtons}
               yamlKeyPrefix={yamlKeyPrefix}
+              height={height}
+              width={width}
             />
           );
         })}
@@ -641,7 +653,7 @@ function MaskValues({
   );
 }
 
-function Item({ mainkey, subkey, editing, handleEdit, points, showButtons, _handleAdd, handleRemove, yamlKeyPrefix }) {
+function Item({ mainkey, subkey, editing, handleEdit, points, showButtons, _handleAdd, handleRemove, yamlKeyPrefix, height, width }) {
   return (
     <span
       data-key={mainkey}
@@ -652,7 +664,7 @@ function Item({ mainkey, subkey, editing, handleEdit, points, showButtons, _hand
       onClick={handleEdit}
       title="Click to edit"
     >
-      {`${yamlKeyPrefix(points, mainkey, subkey)}${polylinePointsToPolyline(points)}`}
+      {`${yamlKeyPrefix(points, mainkey, subkey)}${polylinePointsToPolyline(points, height, width)}`}
       {showButtons ? (
         <Button
           className="absolute top-0 right-0"
@@ -668,16 +680,16 @@ function Item({ mainkey, subkey, editing, handleEdit, points, showButtons, _hand
   );
 }
 
-function getPolylinePoints(polyline) {
+function getPolylinePoints(polyline, height, width) {
   if (!polyline) {
     return;
   }
 
   return polyline.split(',').reduce((memo, point, i) => {
     if (i % 2) {
-      memo[memo.length - 1].push(parseInt(point, 10));
+      memo[memo.length - 1].push(Math.round(parseFloat(point, 10) * height));
     } else {
-      memo.push([parseInt(point, 10)]);
+      memo.push([Math.round(parseFloat(point, 10) * width)]);
     }
     return memo;
   }, []);
@@ -691,9 +703,12 @@ function scalePolylinePoints(polylinePoints, scale) {
   return polylinePoints.map(([x, y]) => [Math.round(x * scale), Math.round(y * scale)]);
 }
 
-function polylinePointsToPolyline(polylinePoints) {
+function polylinePointsToPolyline(polylinePoints, height = null, width = null) {
   if (!polylinePoints) {
     return;
+  }
+  if (height != null && width != null) {
+    return polylinePoints.reduce((memo, [x, y]) => `${memo}${(x / width).toFixed(3)},${(y / height).toFixed(3)},`, '').replace(/,$/, '');
   }
   return polylinePoints.reduce((memo, [x, y]) => `${memo}${x},${y},`, '').replace(/,$/, '');
 }
