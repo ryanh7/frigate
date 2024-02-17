@@ -205,7 +205,7 @@ ${Object.keys(zonePoints)
 
       document.body.removeChild(textarea);
     }
-  }, [zonePoints]);
+  }, [zonePoints, height, width]);
 
   const handleSaveZones = useCallback(async () => {
     try {
@@ -227,7 +227,7 @@ ${Object.keys(zonePoints)
         setError(error.message);
       }
     }
-  }, [camera, zonePoints]);
+  }, [camera, zonePoints, height, width]);
 
   // Object methods
   const handleEditObjectMask = useCallback(
@@ -291,7 +291,7 @@ ${Object.keys(objectMaskPoints)
         setError(error.message);
       }
     }
-  }, [camera, objectMaskPoints]);
+  }, [camera, objectMaskPoints, height, width]);
 
   const handleAddToObjectMask = useCallback(
     (key) => {
