@@ -36,6 +36,7 @@ import { About } from '../icons/About';
 import MenuIcon from '../icons/Menu';
 import { MenuOpen } from '../icons/MenuOpen';
 import { FormattedMessage } from 'react-intl';
+import { FormattedDuration } from '../i18n/time';
 
 const API_LIMIT = 25;
 
@@ -815,7 +816,7 @@ function Event({
                 <TimeAgo time={event.start_time * 1000} dense />
               </div>
               <div className="hidden sm:inline">
-                <span className="m-1" />( {getDurationFromTimestamps(event.start_time, event.end_time)} )
+                <span className="m-1" />( <FormattedDuration start_time={event.start_time} end_time={event.end_time} /> )
               </div>
             </div>
             <div className="capitalize text-sm flex align-center mt-1">
