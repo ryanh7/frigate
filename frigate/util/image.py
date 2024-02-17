@@ -138,10 +138,7 @@ def draw_box_with_label(
 ):
     if color is None:
         color = (0, 0, 255)
-    try:
-        display_text = transliterate_to_latin("{}: {}".format(label, info))
-    except Exception:
-        display_text = "{}: {}".format(label, info)
+    display_text = "{}: {}".format(label, info)
     cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), color, thickness)
     font_scale = 0.5
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -680,8 +677,9 @@ def create_mask(frame_shape, mask):
 
 
 def add_mask(mask, mask_img):
+    height, width = mask_img.shape
     points = mask.split(",")
     contour = np.array(
-        [[int(points[i]), int(points[i + 1])] for i in range(0, len(points), 2)]
+        [[round(float(points[i]) * width), round(float(points[i + 1]) * height)] for i in range(0, len(points), 2)]
     )
     cv2.fillPoly(mask_img, pts=[contour], color=(0))
