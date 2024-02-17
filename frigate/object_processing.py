@@ -359,7 +359,7 @@ class TrackedObject:
                 box[2],
                 box[3],
                 self.translate(self.obj_data["label"]),
-                f"{int(self.thumbnail_data['score']*100)}% {int(self.thumbnail_data['area'])}",
+                f"{int(self.thumbnail_data['score']*100)}%",
                 thickness=thickness,
                 color=color,
             )
@@ -537,7 +537,7 @@ class CameraState:
                     box[2],
                     box[3],
                     text,
-                    f"{obj['score']:.0%} {int(obj['area'])}",
+                    f"{obj['score']:.0%}",
                     thickness=thickness,
                     color=color,
                 )

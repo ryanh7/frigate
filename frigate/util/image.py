@@ -140,7 +140,7 @@ def draw_box_with_label(
         color = (0, 0, 255)
     display_text = "{}: {}".format(label, info)
     cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), color, thickness)
-    font_scale = 0.5
+    font_scale = 0.7
     font = cv2.FONT_HERSHEY_SIMPLEX
     # get the width and height of the text box
     size = cv2.getTextSize(display_text, font, fontScale=font_scale, thickness=2)
