@@ -1,30 +1,15 @@
-import { h, FunctionComponent } from 'preact';
+import { h } from 'preact';
 import { useEffect, useMemo, useState } from 'preact/hooks';
+import { FormattedMessage } from 'react-intl';
 
-interface IProp {
-  /** The time to calculate time-ago from */
-  time: Date;
-  /** OPTIONAL: overwrite current time */
-  currentTime?: Date;
-  /** OPTIONAL: boolean that determines whether to show the time-ago text in dense format */
-  dense?: boolean;
-  /** OPTIONAL: set custom refresh interval in milliseconds, default 1000 (1 sec) */
-  refreshInterval?: number;
-}
 
-type TimeUnit = {
-  unit: string;
-  full: string;
-  value: number;
-};
+const timeAgo = ({ time, currentTime = new Date(), dense = false }) => {
+  if (typeof time !== 'number' || time < 0) return <FormattedMessage id='Invalid Time Provided' defaultMessage='Invalid Time Provided' />;
 
-const timeAgo = ({ time, currentTime = new Date(), dense = false }: IProp): string => {
-  if (typeof time !== 'number' || time < 0) return 'Invalid Time Provided';
+  const pastTime = new Date(time);
+  const elapsedTime = currentTime.getTime() - pastTime.getTime();
 
-  const pastTime: Date = new Date(time);
-  const elapsedTime: number = currentTime.getTime() - pastTime.getTime();
-
-  const timeUnits: TimeUnit[] = [
+  const timeUnits = [
     { unit: 'yr', full: 'year', value: 31536000 },
     { unit: 'mo', full: 'month', value: 0 },
     { unit: 'd', full: 'day', value: 86400 },
@@ -33,9 +18,9 @@ const timeAgo = ({ time, currentTime = new Date(), dense = false }: IProp): stri
     { unit: 's', full: 'second', value: 1 },
   ];
 
-  const elapsed: number = elapsedTime / 1000;
+  const elapsed = elapsedTime / 1000;
   if (elapsed < 10) {
-    return 'just now';
+    return <FormattedMessage id='just now' defaultMessage='just now' />;
   }
 
   for (let i = 0; i < timeUnits.length; i++) {
@@ -58,24 +43,28 @@ const timeAgo = ({ time, currentTime = new Date(), dense = false }: IProp): stri
 
       if (monthDiff > 0) {
         const unitAmount = monthDiff;
-        return `${unitAmount}${dense ? timeUnits[i].unit : ` ${timeUnits[i].full}`}${dense ? '' : 's'} ago`;
+        return <>
+          <FormattedMessage id={`${timeUnits[i].full}_ago`} defaultMessage={`{unitAmount}${dense ? timeUnits[i].unit : ` ${timeUnits[i].full}`}${dense ? '' : 's'} ago`} values={{unitAmount}}/>
+        </>;
       }
     } else if (elapsed >= timeUnits[i].value) {
-      const unitAmount: number = Math.floor(elapsed / timeUnits[i].value);
-      return `${unitAmount}${dense ? timeUnits[i].unit : ` ${timeUnits[i].full}`}${dense ? '' : 's'} ago`;
+      const unitAmount = Math.floor(elapsed / timeUnits[i].value);
+      return <>
+        <FormattedMessage id={`${timeUnits[i].full}_ago`} defaultMessage={`{unitAmount}${dense ? timeUnits[i].unit : ` ${timeUnits[i].full}`}${dense ? '' : 's'} ago`} values={{unitAmount}}/>
+      </>;
     }
   }
-  return 'Invalid Time';
+  return <FormattedMessage id='Invalid Time' defaultMessage='Invalid Time' />;
 };
 
-const TimeAgo: FunctionComponent<IProp> = ({ refreshInterval = 1000, ...rest }): JSX.Element => {
-  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+const TimeAgo = ({ refreshInterval = 1000, ...rest }) => {
+  const [currentTime, setCurrentTime] = useState(new Date());
   useEffect(() => {
-    const intervalId: NodeJS.Timeout = setInterval(() => {
+    const intervalId = setInterval(() => {
       setCurrentTime(new Date());
     }, refreshInterval);
     return () => clearInterval(intervalId);
-  }, [refreshInterval]);
+  }, [refreshInterval, setCurrentTime]);
 
   const timeAgoValue = useMemo(() => timeAgo({ currentTime, ...rest }), [currentTime, rest]);
 

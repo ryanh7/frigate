@@ -316,7 +316,7 @@ ${Object.keys(objectMaskPoints)
 
   return (
     <div className="flex-col space-y-4 p-2 px-4">
-      <Heading size="2xl">{camera} <FormattedMessage id="Mask & Zone creator" defaultMessage="Mask & Zone creator" /></Heading>
+      <Heading size="2xl"><FormattedMessage id={camera} defaultMessage={camera} /> <FormattedMessage id="Mask & Zone creator" defaultMessage="Mask & Zone creator" /></Heading>
 
       <Card
         content={
