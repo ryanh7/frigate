@@ -125,7 +125,7 @@ export default function CameraMasks({ camera }) {
 
       document.body.removeChild(textarea);
     }
-  }, [motionMaskPoints]);
+  }, [motionMaskPoints, height, width]);
 
   const handleSaveMotionMasks = useCallback(async () => {
     try {
@@ -273,7 +273,7 @@ ${Object.keys(objectMaskPoints)
         .map(
           (objectName, index) =>
             `cameras.${camera}.objects.filters.${objectName}.mask.${index}=${polylinePointsToPolyline(
-              objectMaskPoints[objectName], height, width
+              objectMaskPoints[objectName][index], height, width
             )}`
         )
         .join('&');
@@ -708,7 +708,7 @@ function polylinePointsToPolyline(polylinePoints, height = null, width = null) {
     return;
   }
   if (height != null && width != null) {
-    return polylinePoints.reduce((memo, [x, y]) => `${memo}${(x / width).toFixed(3)},${(y / height).toFixed(3)},`, '').replace(/,$/, '');
+        return polylinePoints.reduce((memo, [x, y]) => `${memo}${(x / width).toFixed(3)},${(y / height).toFixed(3)},`, '').replace(/,$/, '');
   }
   return polylinePoints.reduce((memo, [x, y]) => `${memo}${x},${y},`, '').replace(/,$/, '');
 }
