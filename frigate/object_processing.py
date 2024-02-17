@@ -103,7 +103,7 @@ def is_better_thumbnail(label, current_thumb, new_obj, frame_shape) -> bool:
 
 class TrackedObject:
     def __init__(
-        self, camera, colormap, camera_config: CameraConfig, frame_cache, obj_data
+        self, camera, colormap, camera_config: CameraConfig, frame_cache, obj_data, translations
     ):
         # set the score history then remove as it is not part of object state
         self.score_history = obj_data["score_history"]
@@ -127,6 +127,10 @@ class TrackedObject:
         self.last_published = 0
         self.frame = None
         self.previous = self.to_dict()
+        self.translations = translations or {}
+
+    def translate(self, text):
+        return self.translations.get(text, text)
 
     def _is_false_positive(self):
         # once a true positive, always a true positive
@@ -354,7 +358,7 @@ class TrackedObject:
                 box[1],
                 box[2],
                 box[3],
-                self.obj_data["label"],
+                self.translate(self.obj_data["label"]),
                 f"{int(self.thumbnail_data['score']*100)}% {int(self.thumbnail_data['area'])}",
                 thickness=thickness,
                 color=color,
@@ -369,7 +373,7 @@ class TrackedObject:
                     box[1],
                     box[2],
                     box[3],
-                    attribute["label"],
+                    self.translate(attribute["label"]),
                     f"{attribute['score']:.0%}",
                     thickness=thickness,
                     color=color,
@@ -472,6 +476,10 @@ class CameraState:
         self.previous_frame_id = None
         self.callbacks = defaultdict(list)
         self.ptz_autotracker_thread = ptz_autotracker_thread
+        self.translations = self.config.translations or {}
+
+    def translate(self, text):
+        return self.translations.get(text, text)
 
     def get_current_frame(self, draw_options={}):
         with self.current_frame_lock:
@@ -515,12 +523,12 @@ class CameraState:
                 # draw the bounding boxes on the frame
                 box = obj["box"]
                 text = (
-                    obj["label"]
+                    self.translate(obj["label"])
                     if (
                         not obj.get("sub_label")
                         or not is_label_printable(obj["sub_label"][0])
                     )
-                    else obj["sub_label"][0]
+                    else self.translate(obj["sub_label"][0])
                 )
                 draw_box_with_label(
                     frame_copy,
@@ -543,7 +551,7 @@ class CameraState:
                         box[1],
                         box[2],
                         box[3],
-                        attribute["label"],
+                        self.translate(attribute["label"]),
                         f"{attribute['score']:.0%}",
                         thickness=thickness,
                         color=color,
@@ -625,6 +633,7 @@ class CameraState:
                 self.camera_config,
                 self.frame_cache,
                 current_detections[id],
+                self.config.translations,
             )
 
             # call event handlers
