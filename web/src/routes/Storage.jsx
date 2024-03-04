@@ -27,10 +27,10 @@ export default function Storage() {
 
   const getUnitSize = (MB) => {
     if (isNaN(MB) || MB < 0) return 'Invalid number';
-    if (MB < 1024) return `${MB} MiB`;
-    if (MB < 1048576) return `${(MB / 1024).toFixed(2)} GiB`;
+    if (MB < 1024) return `${MB} MB`;
+    if (MB < 1048576) return `${(MB / 1024).toFixed(2)} GB`;
 
-    return `${(MB / 1048576).toFixed(2)} TiB`;
+    return `${(MB / 1048576).toFixed(2)} TB`;
   };
 
   let storage_usage;
@@ -155,14 +155,16 @@ export default function Storage() {
                 <Table className="w-full">
                   <Thead>
                     <Tr>
+                      <Th><FormattedMessage id="Used" defaultMessage="Used" /></Th>
                       <Th><FormattedMessage id="Usage" defaultMessage="Usage" /></Th>
                       <Th><FormattedMessage id="Stream Bandwidth" defaultMessage="Stream Bandwidth" /></Th>
                     </Tr>
                   </Thead>
                   <Tbody>
                     <Tr>
+                      <Td>{getUnitSize(Math.round(camera['usage'] ?? 0))}</Td>
                       <Td>{Math.round(camera['usage_percent'] ?? 0)}%</Td>
-                      <Td>{camera['bandwidth'] ? `${getUnitSize(camera['bandwidth'])}/hr` : 'Calculating...'}</Td>
+                      <Td>{camera['bandwidth'] ? `${getUnitSize(camera['bandwidth'])}/h` : 'Calculating...'}</Td>
                     </Tr>
                   </Tbody>
                 </Table>
