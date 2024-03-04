@@ -26,7 +26,7 @@ export function LanguageProvider({ children }) {
   useEffect(() => {
     const fetchMessages = async () => {
       const messages = languageMessages[language]
-      setMessages({...messages, ...config.translations});
+      setMessages({...messages, ...config?.translations});
     };
 
     fetchMessages();
