@@ -321,7 +321,7 @@ ${Object.keys(objectMaskPoints)
       <Card
         content={
           <div>
-            <p><FormattedMessage id="Mask & Zone creator instructions" defaultMessage="This tool can help you create masks & zones for your {camera} camera." values={{camera}}/></p>
+            <p><FormattedMessage id="This tool can help you create masks & zones for your {camera} camera." defaultMessage="This tool can help you create masks & zones for your {camera} camera." values={{camera}}/></p>
             <ul>
               <li><FormattedMessage id="Click to add a point." defaultMessage="Click to add a point." /></li>
               <li><FormattedMessage id="Click and hold on an existing point to move it." defaultMessage="Click and hold on an existing point to move it." /></li>
@@ -335,8 +335,9 @@ ${Object.keys(objectMaskPoints)
       <Card
         content={
           <p>
-            <FormattedMessage id="Mask & Zone creator warning part 1" defaultMessage="When done, copy each mask configuration into your " /><code className="font-mono">config.yml</code><FormattedMessage id="Mask & Zone creator warning part 2" defaultMessage=" file restart
-            your Frigate instance to save your changes." />
+            <FormattedMessage id="When done, copy each mask configuration into your {file} file restart
+            your Frigate instance to save your changes." defaultMessage="When done, copy each mask configuration into your {file} file restart
+            your Frigate instance to save your changes." values={{file: <code className="font-mono">config.yml</code>}}/>
           </p>
         }
         header="Warning"
