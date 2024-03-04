@@ -411,7 +411,7 @@ export default function System() {
                                 if (cameras[camera]['pid'] && cameras[camera]['detection_enabled'] == 1)
                                   return (
                                     <Td>
-                                      {cameras[camera]['detection_fps']} ({cameras[camera]['skipped_fps']} skipped)
+                                      {cameras[camera]['detection_fps']} ({cameras[camera]['skipped_fps']} <FormattedMessage id="skipped" defaultMessage="skipped" />)
                                     </Td>
                                   );
                                 else if (cameras[camera]['pid'] && cameras[camera]['detection_enabled'] == 0)
@@ -480,7 +480,7 @@ export default function System() {
             ))}
           </div>
 
-          <p>System stats update automatically every {config.mqtt.stats_interval} seconds.</p>
+          <p><FormattedMessage id="System stats update automatically every {seconds} seconds." defaultMessage="System stats update automatically every {seconds} seconds." values={{seconds: config.mqtt.stats_interval}}/></p>
         </Fragment>
       )}
     </div>
