@@ -155,7 +155,7 @@ export default function Export() {
               <option value="select"><FormattedMessage id="Select A Camera" defaultMessage="Select A Camera" /></option>
               {Object.keys(config?.cameras || {}).map((item) => (
                 <option key={item} value={item}>
-                  {item.replaceAll('_', ' ')}
+                  <FormattedMessage id={item} defaultMessage={item.replaceAll('_', ' ')} />
                 </option>
               ))}
             </select>
