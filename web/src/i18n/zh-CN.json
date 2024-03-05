@@ -118,6 +118,7 @@
     "Realtime": "实时",
     "Recordings": "录像",
     "Recordings & Snapshots": "录像和截图",
+    "Recordings must be enabled in the config to be turned on in the UI.": "配置文件中必须启用录像功能，才能在用户界面中开启录像功能。",
     "Regions": "分析区",
     "Remove": "移除",
     "Resolution:": "分辨率：",
