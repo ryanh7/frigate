@@ -164,7 +164,7 @@ export default function Storage() {
                     <Tr>
                       <Td>{getUnitSize(Math.round(camera['usage'] ?? 0))}</Td>
                       <Td>{Math.round(camera['usage_percent'] ?? 0)}%</Td>
-                      <Td>{camera['bandwidth'] ? `${getUnitSize(camera['bandwidth'])}/h` : 'Calculating...'}</Td>
+                      <Td>{camera['bandwidth'] ? `${getUnitSize(camera['bandwidth'])}/h` : <FormattedMessage id="Calculating..." defaultMessage="Calculating..." />}</Td>
                     </Tr>
                   </Tbody>
                 </Table>
