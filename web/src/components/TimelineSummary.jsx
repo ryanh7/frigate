@@ -13,6 +13,7 @@ import DeliveryTruckIcon from '../icons/DeliveryTruck';
 import ZoneIcon from '../icons/Zone';
 import { useMemo, useState } from 'preact/hooks';
 import Button from './Button';
+import { FormattedMessage } from 'react-intl';
 
 export default function TimelineSummary({ event, onFrameSelected }) {
   const { data: eventTimeline } = useSWR([
@@ -107,12 +108,12 @@ export default function TimelineSummary({ event, onFrameSelected }) {
       {timeIndex >= 0 ? (
         <div className="m-2 max-w-md self-center">
           <div className="flex justify-start">
-            <div className="text-lg flex justify-between py-4">Bounding boxes may not align</div>
+            <div className="text-lg flex justify-between py-4"><FormattedMessage id="Bounding boxes may not align" defaultMessage="Bounding boxes may not align" /></div>
             <Button
               className="rounded-full"
               type="text"
               color="gray"
-              aria-label=" Disclaimer: This data comes from the detect feed but is shown on the recordings, it is unlikely that the
+              aria-label="Disclaimer: This data comes from the detect feed but is shown on the recordings, it is unlikely that the
                       streams are perfectly in sync so the bounding box and the footage will not line up perfectly. The annotation_offset field can be used to adjust this."
             >
               <About className="w-4" />
